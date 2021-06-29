@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Ticker</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
+
+</head>
+
+<body onload="get_fn()">
+  <div class="container">
+    <div class="row">
+      <div class='col-sm-6'>
+        <div class="form-group">
+          <div class='input-group date' id='datetimepicker1'>
+            <input type='text' class="form-control" />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label for="avg">Choose an Average:</label>
+    <select name="average" id="average" onchange="get_fn('',this.value)">
+      <option value="SMA" selected>SMA</option>
+      <option value="EMA">EMA</option>
+      <option value="WMA">WMA</option>
+      <option value="HULLMA">HULLMA</option>
+      <option value="VWMA">VWMA</option>
+      <option value="TEMA">TEMA</option>
+    </select>
+    <label for="smth">Choose a Smoothe:</label>
+    <select name="smoothe" id="smoothe" onchange="get_fn('','',this.value)">
+      <option value="3">3</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="4">4</option>
+    </select>
+    <table class="table" id="tickers">
+    </table>
+  </div>
+
+
+  <script>
+    var isValidDate = function (value, format) {
+      format = format || false;
+      // lets parse the date to the best of our knowledge
+      if (format) {
+        value = parseDate(value);
+      }
+      var timestamp = Date.parse(value);
+      return isNaN(timestamp) == false;
+    }
+    var parseDate = function (value) {
+      var m = value.match(/^(\d{1,2})(\/|-)?(\d{1,2})(\/|-)?(\d{4})$/);
+      if (m)
+        value = m[5] + '-' + ("00" + m[3]).slice(-2) + '-' + ("00" + m[1]).slice(-2);
+      return value;
+    }
+    function formatDate(date) {
+      var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+      if (month.length < 2)
+        month = '0' + month;
+      if (day.length < 2)
+        day = '0' + day;
+      return [year, month, day].join('-');
+    }
+    function get_fn(date = '', average_type = '', smoothe = '') {
+      if (!date) {
+        date = $("#datetimepicker1").find("input").val();
+
+        //  date = $('#datetimepicker1').datetimepicker('getDate');
+      }
+      if (!average_type) {
+        average_type = $('#average').val();
+      }
+      if (!smoothe) {
+        smoothe = $('#smoothe').val();
+      }
+      console.log('isnode getfn')
+      let db = fetch('https://aqueous-atoll-16051.herokuapp.com?date=' + date + '&average_type=' + average_type + '&smoothe=' + smoothe)
+        // let db = fetch('http://localhost:3000?average_type='+average_type)
+        .then(async response => {
+          console.log('inside fetch')
+          const result = await response.json()
+          console.log(result + 'is result')
+          document.getElementById('tickers').innerHTML = ``;
+          let html = `
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Ticker</th>
+              <th scope="col">Status</th>
+              <th scope="col">Closed Price</th>
+              <th scope="col">Average Type</th>
+              <th scope="col">Smoothe</th>
+             </tr>
+          </thead>
+          <tbody>`;
+          for (const ticker of result) {
+            html += `<tr>
+            <th scope="row">${formatDate(ticker.date)}</th>
+            <td>${ticker.ticker}</td>
+            <td>${ticker.status}</td>
+            <td>${ticker.closed_price}</td>
+            <td>${ticker.average_type}</td>
+            <td>${ticker.smoothe}</td>
+          </tr>`
+          }
+          html += `</tbody>
+        `;
+          document.getElementById('tickers').innerHTML = html;
+        })
+    }
+    // $(function() {
+    $('#datetimepicker1').datetimepicker({
+      format: 'YYYY-MM-DD',
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-arrow-up",
+        down: "fa fa-arrow-down"
+      }
+    }).find('input:first').on("blur", function () {
+      // check if the date is correct. We can accept dd-mm-yyyy and yyyy-mm-dd.
+      // update the format if it's yyyy-mm-dd
+      var date = parseDate($(this).val());
+      if (!isValidDate(date)) {
+        //create date based on momentjs (we have that)
+        date = moment().format('YYYY-MM-DD');
+      }
+      $(this).val(date);
+      get_fn(date)
+    });
+// });
+  </script>
+
+</body>
+
+</html>
