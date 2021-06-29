@@ -1885,7 +1885,7 @@ let funtema = async  (json2, json1, smoothe) => {
 // 
     // return statusarray;
   
-  }, 500);
+  }, 10000);
   // };
   }
   // let email_html = `<!DOCTYPE html>
