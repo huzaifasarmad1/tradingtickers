@@ -1679,6 +1679,7 @@ let func = async () => {
             console.log('Pushing ticker 1', ticker, increased_tickers.length)
             increased_tickers.push(ticker);
             storedb(ticker);
+            
           }
           let EMAstatus = await EMA(allData, latestData, smoothe)
           ticker = { date: latestData[0].date, ticker: data[iterator], status: EMAstatus.status, closed_price: latestData[0].close, average_type: EMAstatus.average_type, smoothe: EMAstatus.smoothe }
