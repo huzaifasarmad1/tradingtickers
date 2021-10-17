@@ -1310,7 +1310,7 @@ let HULLMA = async (allData, latestData, smoothe) => {
   }
 
 }
-let funtema = async (allData, latestData, smoothe) => {
+let TEMA = async (allData, latestData, smoothe) => {
   let status = ''
   var average_type = 'TEMA'
   let arrematoday = []
@@ -1638,7 +1638,7 @@ let func = async () => {
         }
       }
       catch (err) {
-        console.log('caching')
+        console.log('catching')
         console.log(err)
       }
 
@@ -1670,8 +1670,8 @@ let func = async () => {
         }
 
         for (const smoothe of [1, 2, 3, 4]) {
-          let dbstatus1 = await SMA(allData, latestData, smoothe)
-          let ticker = { date: latestData[0].date, ticker: data[iterator], status: dbstatus1.status, closed_price: latestData[0].close, average_type: dbstatus1.average_type, smoothe: dbstatus1.smoothe }
+          let SMAstatus = await SMA(allData, latestData, smoothe)
+          let ticker = { date: latestData[0].date, ticker: data[iterator], status: SMAstatus.status, closed_price: latestData[0].close, average_type: SMAstatus.average_type, smoothe: SMAstatus.smoothe }
           if (ticker.status == '') {
             console.log('no status found')
           }
@@ -1680,8 +1680,8 @@ let func = async () => {
             increased_tickers.push(ticker);
             storedb(ticker);
           }
-          let dbstatus2 = await EMA(allData, latestData, smoothe)
-          ticker = { date: latestData[0].date, ticker: data[iterator], status: dbstatus2.status, closed_price: latestData[0].close, average_type: dbstatus2.average_type, smoothe: dbstatus2.smoothe }
+          let EMAstatus = await EMA(allData, latestData, smoothe)
+          ticker = { date: latestData[0].date, ticker: data[iterator], status: EMAstatus.status, closed_price: latestData[0].close, average_type: EMAstatus.average_type, smoothe: EMAstatus.smoothe }
           if (ticker.status == '') {
             console.log('no status found')
           }
@@ -1690,8 +1690,8 @@ let func = async () => {
             increased_tickers.push(ticker);
             storedb(ticker);
           }
-          let dbstatus3 = await WMA(allData, latestData, smoothe)
-          ticker = { date: latestData[0].date, ticker: data[iterator], status: dbstatus3.status, closed_price: latestData[0].close, average_type: dbstatus3.average_type, smoothe: dbstatus3.smoothe }
+          let WMAstatus = await WMA(allData, latestData, smoothe)
+          ticker = { date: latestData[0].date, ticker: data[iterator], status: WMAstatus.status, closed_price: latestData[0].close, average_type: WMAstatus.average_type, smoothe: WMAstatus.smoothe }
           if (ticker.status == '') {
             console.log('no status found')
           }
@@ -1700,8 +1700,8 @@ let func = async () => {
             increased_tickers.push(ticker);
             storedb(ticker);
           }
-          let dbstatus4 = await VWMA(allData, latestData, smoothe)
-          ticker = { date: latestData[0].date, ticker: data[iterator], status: dbstatus4.status, closed_price: latestData[0].close, average_type: dbstatus4.average_type, smoothe: dbstatus4.smoothe }
+          let VWMAstatus = await VWMA(allData, latestData, smoothe)
+          ticker = { date: latestData[0].date, ticker: data[iterator], status: VWMAstatus.status, closed_price: latestData[0].close, average_type: VWMAstatus.average_type, smoothe: VWMAstatus.smoothe }
           if (ticker.status == '') {
             console.log('no status found')
           }
@@ -1710,8 +1710,8 @@ let func = async () => {
             increased_tickers.push(ticker);
             storedb(ticker);
           }
-          let dbstatus5 = await HULLMA(allData, latestData, smoothe)
-          ticker = { date: latestData[0].date, ticker: data[iterator], status: dbstatus5.status, closed_price: latestData[0].close, average_type: dbstatus5.average_type, smoothe: dbstatus5.smoothe }
+          let HULLMAstatus = await HULLMA(allData, latestData, smoothe)
+          ticker = { date: latestData[0].date, ticker: data[iterator], status: HULLMAstatus.status, closed_price: latestData[0].close, average_type: HULLMAstatus.average_type, smoothe: HULLMAstatus.smoothe }
           if (ticker.status == '') {
             console.log('no status found')
           }
@@ -1720,8 +1720,8 @@ let func = async () => {
             increased_tickers.push(ticker);
             storedb(ticker);
           }
-          let dbstatus6 = await funtema(allData, latestData, smoothe)
-          ticker = { date: latestData[0].date, ticker: data[iterator], status: dbstatus6.status, closed_price: latestData[0].close, average_type: dbstatus6.average_type, smoothe: dbstatus6.smoothe }
+          let TEMAstatus = await TEMA(allData, latestData, smoothe)
+          ticker = { date: latestData[0].date, ticker: data[iterator], status: TEMAstatus.status, closed_price: latestData[0].close, average_type: TEMAstatus.average_type, smoothe: TEMAstatus.smoothe }
           if (ticker.status == '') {
             console.log('no status found')
           }
@@ -1738,7 +1738,6 @@ let func = async () => {
     } catch (error) {
       console.error(error);
     }
-    console.log('at the end of set interval', increased_tickers.length)
     iterator = iterator + 1;
     if (iterator == data.length) {
       //keep only max date records
