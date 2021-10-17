@@ -21,11 +21,11 @@ const { type } = require('os');
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'kaftabmemon@gmail.com', //add email from where you want to send the email
-    pass: 'burlfish' //add pass for that email
+    user: '', //add email from where you want to send the email
+    pass: '' //add pass for that email
   }
 });
-mongoose.connect('mongodb+srv://khurram:khurramaftab@cluster0.7lsze.mongodb.net/colorchangedb', { useNewUrlParser: true });
+mongoose.connect('', { useNewUrlParser: true });
 app.use(cors())
 const asyncIntervals = [];
 const runAsyncInterval = async (cb, interval, intervalIndex) => {
@@ -1716,7 +1716,7 @@ let funtema = async  (allData, latestData, smoothe) => {
 }
 ////////////////////////////////////////////////////////
 // let func = async (average_type, smoothe) => {
-  var token='e15237c196fb99408d604a9cce465d401a8c7b22';
+  var token='';
   let func = async () => {
   // console.log(average_type + 'is average type')
   // console.log(smoothe + 'smoothed')
@@ -1762,7 +1762,7 @@ let funtema = async  (allData, latestData, smoothe) => {
       // ticker = { date: latestData[0].date, ticker: data[iterator], closed_price: latestData[0].close, Volume:latestData[0].volume }
       console.log("latestData",latestData)
       if(latestData.detail=='Error: You have run over your monthly bandwidth allocation. Please upgrade at https://api.tiingo.com/pricing to have your limits increased.'){
-        token='e78b73afdfd0a4e7e3927a095b34281ee5f018da'
+        token=''
         func();
       }
     }
@@ -1943,7 +1943,7 @@ let funtema = async  (allData, latestData, smoothe) => {
     // setup e-mail data with unicode symbols
     var mailOptions = {
       from: '"Tickers changed ?" <no-reply@tickers.com>', // sender address
-      to: 'huzaifa8300@gmail.com', // list of receivers( , separated here)
+      to: '', // list of receivers( , separated here)
       subject: 'New York Stock Exchange Smoothing CMultimate MA', // Subject line
       html: email_html // html body
   
